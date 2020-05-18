@@ -7,7 +7,8 @@ Pillow==6.2.0
 python-dateutil==2.7.5
 
 # mysql database
-MySQL-python==1.2.5
+#MySQL-python==1.2.5
+#MySQL-python
 
 django-storages==1.6.5
 python-resize-image==1.1.10
@@ -89,8 +90,8 @@ apispec==0.22.0
 apispec-djangorestframework==1.0.6
 responses==0.8.1
 mock==3.0.5
-django_mock_queries==2.0.0
-
+#django_mock_queries==2.0.0
+django_mock_queries
 # lti consumer
 lti==0.9.2
 
