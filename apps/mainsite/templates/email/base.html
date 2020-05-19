@@ -318,14 +318,14 @@
       <![endif]-->
                               </td>
                             </tr>
-                            {% if OPERATOR_ADDRESS and OPERATOR_NAME %}
+                            {% if OPERATOR_STREET_ADDRESS and OPERATOR_NAME %}
                             <tr>
                               <td align="left" style="font-size:0px;padding:10px 25px;word-break:break-word;">
                                 <div style="font-family:'Open Sans', Helvetica, Arial, sans-serif;font-size:16px;font-weight:400;line-height:24px;text-align:left;color:#666666;">
                                   Sent from {% if OPERATOR_URL %}
                                     <a href="{{ OPERATOR_URL }}" class="linkstyle" style="color: #515dc6; font-weight: bold; text-decoration: none;">{{ OPERATOR_NAME }}</a>
                                 {% else %}{{ OPERATOR_NAME }}{% endif %}<br/>
-                                  {{ OPERATOR_ADDRESS }}
+                                  {{ OPERATOR_STREET_ADDRESS }}
                                 </div>
                               </td>
                             </tr>
