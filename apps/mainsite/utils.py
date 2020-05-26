@@ -350,3 +350,29 @@ def _request_authenticated_with_admin_scope(request):
     if token is None:
         return False
     return 'rw:serverAdmin' in getattr(token, 'scope', '')
+
+
+def convert_svg_to_png(svg_string, height, width):
+    """
+    Converts an SVG string into a PNG image via a conversion API
+    :param svg_string: An SVG
+    :param height: PNG height
+    :param width: PNG width
+    :return: BytesIO of PNG bytes
+    """
+    response = requests.post(settings.SVG_SERVERLESS_CONVERSION_ENDPOINT, json=dict(
+        svgString=svg_string,
+        height=height,
+        width=width
+    ))
+    if response.status_code != 200:
+        return False
+    try:
+        result = response.json()
+        if 'data' not in result or result['statusCode'] != 200:
+            return False
+        b64png = result['data'].replace('data:image/png;base64,', '')
+        return io.BytesIO(base64.b64decode(b64png))
+    except ValueError:
+        # Issuing decoding response JSON
+        return False

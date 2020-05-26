@@ -32,7 +32,7 @@ import badgrlog
 from entity.models import BaseVersionedEntity
 from issuer.managers import BadgeInstanceManager, IssuerManager, BadgeClassManager, BadgeInstanceEvidenceManager
 from mainsite.managers import SlugOrJsonIdCacheModelManager
-from mainsite.mixins import ResizeUploadedImage, ScrubUploadedSvgImage
+from mainsite.mixins import ResizeUploadedImage, ScrubUploadedSvgImage, ConvertSvgToPng
 from mainsite.models import BadgrApp, EmailBlacklist
 from mainsite import blacklist
 from mainsite.utils import OriginSetting, generate_entity_uri
@@ -153,6 +153,7 @@ class BaseOpenBadgeExtension(cachemodel.CacheModel):
 
 class Issuer(ResizeUploadedImage,
              ScrubUploadedSvgImage,
+             ConvertSvgToPng,
              BaseAuditedModel,
              BaseVersionedEntity,
              BaseOpenBadgeObjectModel):
@@ -170,6 +171,7 @@ class Issuer(ResizeUploadedImage,
 
     name = models.CharField(max_length=1024)
     image = models.FileField(upload_to='uploads/issuers', blank=True, null=True)
+    image_preview = models.FileField(upload_to='uploads/badges', blank=True, null=True)
     description = models.TextField(blank=True, null=True, default=None)
     url = models.CharField(max_length=254, blank=True, null=True, default=None)
     email = models.CharField(max_length=254, blank=True, null=True, default=None)
@@ -302,10 +304,6 @@ class Issuer(ResizeUploadedImage,
     def recipient_count(self):
         return sum(bc.recipient_count() for bc in self.cached_badgeclasses())
 
-    @property
-    def image_preview(self):
-        return self.image
-
     def get_json(self, obi_version=CURRENT_OBI_VERSION, include_extra=True, use_canonical_id=False):
         obi_version, context_iri = get_obi_context(obi_version)
 
@@ -419,6 +417,7 @@ def get_user_or_none(recipient_id, recipient_type):
 
 class BadgeClass(ResizeUploadedImage,
                  ScrubUploadedSvgImage,
+                 ConvertSvgToPng,
                  BaseAuditedModel,
                  BaseVersionedEntity,
                  BaseOpenBadgeObjectModel):
@@ -445,6 +444,7 @@ class BadgeClass(ResizeUploadedImage,
 
     name = models.CharField(max_length=255)
     image = models.FileField(upload_to='uploads/badges', blank=True)
+    image_preview = models.FileField(upload_to='uploads/badges', blank=True, null=True)
     description = models.TextField(blank=True, null=True, default=None)
 
     criteria_url = models.CharField(max_length=254, blank=True, null=True, default=None)

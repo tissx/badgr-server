@@ -490,3 +490,7 @@ AUTHCODE_EXPIRES_SECONDS = 600  # needs to be long enough to fetch information f
 SAML_EMAIL_KEYS = ['Email', 'mail']
 SAML_FIRST_NAME_KEYS = ['FirstName', 'givenName']
 SAML_LAST_NAME_KEYS = ['LastName', 'sn']
+
+# Serverless SVG to PNG settings
+SVG_SERVERLESS_CONVERSION_ENABLED = False
+SVG_SERVERLESS_CONVERSION_ENDPOINT = '' # ex. http://example.com/convert-to-png
