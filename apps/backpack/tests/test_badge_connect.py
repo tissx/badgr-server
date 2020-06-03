@@ -3,6 +3,9 @@ from __future__ import unicode_literals
 
 import json
 from urllib import parse
+from hashlib import sha256
+from base64 import b64encode
+from urllib.parse import quote
 
 from openbadges.verifier.openbadges_context import OPENBADGES_CONTEXT_V2_URI, OPENBADGES_CONTEXT_V2_DICT
 import responses
@@ -76,17 +79,23 @@ class BadgeConnectOAuthTests(BadgrTestCase, SetupIssuerHelper):
         response = self.client.post('/o/register', registration_data)
         client_id = response.data['client_id']
         url = '/o/authorize'
+        pkce_code_verifier = 'A-Za-z0-9._~'  # Random str with these chars
+        pkce_code_challenge = quote(b64encode(sha256(pkce_code_verifier.encode('ascii')).digest()))
         data = {
             "allow": True,
             "response_type": "code",
             "client_id": response.data['client_id'],
             "redirect_uri": registration_data['redirect_uris'][0],
+            "scope": ' ' .join(requested_scopes),
             "scopes": requested_scopes,
-            "state": ""
+            "state": "",
+            'code_challenge': pkce_code_challenge,
+            'code_challenge_method': 'S256',
         }
         response = self.client.post(url, data=data)
         self.assertEqual(response.status_code, 200)
-        self.assertTrue(response.data['success_url'].startswith(registration_data['redirect_uris'][0]))
+        self.assertTrue(response.data['success_url'].startswith(
+            registration_data['redirect_uris'][0]))
         url = parse.urlparse(response.data['success_url'])
         code = parse.parse_qs(url.query)['code'][0]
 
@@ -96,6 +105,7 @@ class BadgeConnectOAuthTests(BadgrTestCase, SetupIssuerHelper):
             'client_id': client_id,
             'redirect_uri': registration_data['redirect_uris'][0],
             'scope': ' '.join(requested_scopes),
+            'code_verifier': pkce_code_verifier,
         }
         response = self.client.post('/o/token', data=data)
         self.assertEqual(response.status_code, 200)

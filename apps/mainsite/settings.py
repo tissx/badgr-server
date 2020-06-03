@@ -4,6 +4,8 @@ import os
 from mainsite import TOP_DIR
 import logging
 
+PKCE_REQUIRED = True
+
 
 ##
 #
