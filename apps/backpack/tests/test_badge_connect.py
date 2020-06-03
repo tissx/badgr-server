@@ -105,7 +105,8 @@ class BadgeConnectOAuthTests(BadgrTestCase, SetupIssuerHelper):
             'client_id': client_id,
             'redirect_uri': registration_data['redirect_uris'][0],
             'scope': ' '.join(requested_scopes),
-            'code_verifier': pkce_code_verifier,
+            #'code_verifier': pkce_code_verifier,
+            'code_verifier': 'WRONG',
         }
         response = self.client.post('/o/token', data=data)
         self.assertEqual(response.status_code, 200)

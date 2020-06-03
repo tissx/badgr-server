@@ -37,6 +37,8 @@ class AuthorizationSerializer(serializers.Serializer):
     scopes = serializers.ListField(child=serializers.CharField())
     scope = serializers.CharField(required=False, default=None, allow_null=True)
     allow = serializers.BooleanField(required=True)
+    # code_challenge = serializers.CharField(required=True)
+    # code_challenge_method = serializers.CharField(required=True)
 
 
 class AuthorizationApiView(OAuthLibMixin, APIView):
