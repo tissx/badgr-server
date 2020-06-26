@@ -172,6 +172,11 @@ def create_saml_config_for(config):
                         (https_acs_url, BINDING_HTTP_POST)
                     ],
                 },
+                "required_attributes": [
+                    "Email",
+                    "FirstName",
+                    "LastName"
+                ],
                 # Don't verify that the incoming requests originate from us via
                 # the built-in cache for authn request ids in pysaml2
                 'allow_unsolicited': True,
