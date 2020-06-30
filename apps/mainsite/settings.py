@@ -130,7 +130,7 @@ STATICFILES_FINDERS = [
 ]
 
 STATIC_ROOT = os.path.join(TOP_DIR, 'staticfiles')
-STATIC_URL = HTTP_ORIGIN+'/static/'
+STATIC_URL = '/static/'
 STATICFILES_DIRS = [
     os.path.join(TOP_DIR, 'apps', 'mainsite', 'static'),
 ]
@@ -491,3 +491,4 @@ AUTHCODE_EXPIRES_SECONDS = 600  # needs to be long enough to fetch information f
 SAML_EMAIL_KEYS = ['Email', 'mail']
 SAML_FIRST_NAME_KEYS = ['FirstName', 'givenName']
 SAML_LAST_NAME_KEYS = ['LastName', 'sn']
+

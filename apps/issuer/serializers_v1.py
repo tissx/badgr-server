@@ -152,7 +152,7 @@ class BadgeClassSerializerV1(OriginalJsonSerializerMixin, serializers.Serializer
     id = serializers.IntegerField(required=False, read_only=True)
     name = StripTagsCharField(max_length=255)
     image = ValidImageField(required=False)
-    slug = StripTagsCharField(max_length=255, read_only=True, source='entity_id')
+    slug = StripTagsCharField(max_length=255, read_only=False)
     criteria = MarkdownCharField(allow_blank=True, required=False, write_only=True)
     criteria_text = MarkdownCharField(required=False, allow_null=True, allow_blank=True)
     criteria_url = StripTagsCharField(required=False, allow_blank=True, allow_null=True, validators=[URLValidator()])
