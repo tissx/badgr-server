@@ -1043,6 +1043,24 @@ class BadgeInstance(BaseAuditedModel,
             pass
         return None
 
+    # def get_api_acess_token():
+    #     acess_token_credentials=getattr(settings, 'LMS_TOKEN_CREDENTIALS',{})
+    #     lms_url= configuration_helpers.get_value('LMS_ROOT_URL', settings.LMS_ROOT_URL)
+    #     access_token_url='{}/oauth2/access_token/'.format(lms_url)
+    #     try:
+    #         response = requests.post(access_token_url,data=acess_token_credentials)
+    #         if response.ok:
+    #             acess_token=response.json()['access_token']
+    #         else:
+    #             acess_token=None
+    #     except requests.exceptions.RequestException as e:
+    #         err_msg = "Failed to get user acess token with exception {}"
+    #         log.error(err_msg.format(e))
+    #         acess_token=None
+    #     return acess_token
+    # def get_user_grade(username):
+    
+
     def get_json(self, obi_version=CURRENT_OBI_VERSION, expand_badgeclass=False, expand_issuer=False, include_extra=True, use_canonical_id=False):
         obi_version, context_iri = get_obi_context(obi_version)
 
@@ -1055,6 +1073,11 @@ class BadgeInstance(BaseAuditedModel,
 
         image_url = OriginSetting.HTTP + reverse('badgeinstance_image', kwargs={'entity_id': self.entity_id})
         json['image'] = image_url
+        json['recipient_identifier']=self.recipient_identifier
+        from mx_grade_utility.utils import get_user_grade
+        user_grading=get_user_grade(self)
+        json['letter_grade']=user_grading['letter_grade'] if 'letter_grade' in  user_grading else None
+        json['achievementMessage']=user_grading['achievementMessage'] if 'achievementMessage' in  user_grading else None
         if self.original_json:
             image_info = self.get_original_json().get('image', None)
             if isinstance(image_info, dict):
