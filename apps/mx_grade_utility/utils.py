@@ -18,7 +18,16 @@ def get_lms_api_token():
     return acess_token
 
 def getUserGrade(badgeinstance,recipient_email):
+    print('----------------Called-----------------')
     acess_token=get_lms_api_token()
+    grade_detail={
+        "username": None,
+        "letter_grade": None,
+        "percent": 0.0,
+        "course_key": None,
+        "passed": False,
+        'achievementMessage':None
+    }
     if acess_token:
         lms_url= getattr(settings, 'LMS_ROOT_URL','http://192.168.0.169:8000')
         api_url='{}/mx_utility/api/get_user_grade/'.format(lms_url)
@@ -27,22 +36,34 @@ def getUserGrade(badgeinstance,recipient_email):
             param={'recipient_email':recipient_email,'badge_class_slug':badgeinstance.badgeclass.slug}
             response = requests.get(api_url,headers=headers,params=param)
             if response.ok:
-                data=response.json()['data']
-                return data
+                grade_detail=response.json()['data']
+                return grade_detail
         except requests.exceptions.RequestException as e:
             print(e)
-    return dict()
+    return grade_detail
 
 def get_user_grade(badgeinstance):
     from issuer.models import BadgeInstance, BadgeClass
-    if not isinstance(badgeinstance, BadgeInstance):
-        return None
-    else :
-        badge_class_slug=badgeinstance.badgeclass.slug
-        recipient_email=badgeinstance.user.email
-        acess_token=get_lms_api_token()
-        grade_detail=getUserGrade(badgeinstance,recipient_email)
-        return grade_detail
+    grade_detail={
+        "username": None,
+        "letter_grade": None,
+        "percent": 0.0,
+        "course_key": None,
+        "passed": False,
+        'achievementMessage':None
+    }
+    try:
+        if not isinstance(badgeinstance, BadgeInstance):
+            pass
+        else :
+            badge_class_slug=badgeinstance.badgeclass.slug
+            recipient_email=badgeinstance.recipient_identifier
+            acess_token=get_lms_api_token()
+            grade_detail=getUserGrade(badgeinstance,recipient_email)
+            return grade_detail
+    except Exception as e:
+        print(e)
+    return grade_detail
 
     
 
